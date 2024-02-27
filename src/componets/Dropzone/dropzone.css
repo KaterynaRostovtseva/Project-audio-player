@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 0 20px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    opacity: 0.8;
+  }
+  .dropzone {
+    margin: 10px;
+    border: 2px dashed #ccc;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+  }
+  .dropzone p {
+    font-size: 16px;
+    font-weight: bold;
+  }
+  ul {
+    padding: 0;
+  }
+  li {
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  
