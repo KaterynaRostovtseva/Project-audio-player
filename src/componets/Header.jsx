@@ -39,7 +39,7 @@ const Header = (prop) => {
     }
     
   }, [data, isLoading, dispatch, searchResults, searchQuery, stateAuth]);
-  
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -52,9 +52,8 @@ const Header = (prop) => {
   const logOut = async () => {
       dispatch(logout());
       handleCloseUserMenu();
-      navigate("/")
+      navigate("/");
   };
-
 
   const handleSearch = () => {
     refetch({title: searchQuery}).then((res) =>  {
@@ -62,8 +61,7 @@ const Header = (prop) => {
       const searchResults = res.data?.TrackFind;
       dispatch(setSearchResults(searchResults));
     })
-    console.log(searchQuery)
-    navigate("/search")
+    navigate("/search");
   };
 
   return (
@@ -94,7 +92,6 @@ const Header = (prop) => {
           </Box> 
           : null
           }
-         
           {stateAuth.token? 
             <Box sx={{ flexGrow: 0 }}>
               <Box sx={{ display:'flex', alignItems:'center' }}>

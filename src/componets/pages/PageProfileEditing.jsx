@@ -59,7 +59,6 @@ const PageProfileEditing = () => {
 
     const savePassword = async () => {
         let res = await setPasswordChangeMutation({ login: user.login, password: password, newPassword: newPassword });//запит на оновлення пароля
-        console.log(res)
         setNewPassword('');
         setPassword('');
         setShowPasswordInput(false);
