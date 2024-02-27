@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { play, pause, stop, setDuration, nextTrack, prevTrack, setCurrentTime, setVolume } from '../../redux/slice/playerSlice';
-import { audio } from "../../redux/slice/playerSlice"
+import { play, pause, stop, setDuration, nextTrack, prevTrack, setCurrentTime, setVolume } from '../redux/slice/playerSlice';
+import { audio } from "../redux/slice/playerSlice";
 import { Grid, Box, Typography } from "@mui/material";
 import Slider from '@mui/material/Slider';
 import PauseRounded from '@mui/icons-material/PauseRounded';
@@ -13,7 +13,7 @@ import VolumeDownRounded from '@mui/icons-material/VolumeDownRounded';
 import Stop from '@mui/icons-material/Stop';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
-import AudioVisualizer from '../AudioVisualizer';
+import AudioVisualizer from './AudioVisualizer';
 
 const MusicPlayerSlider = () => {
 

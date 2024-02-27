@@ -9,7 +9,7 @@ import PageTracks from './componets/pages/PageTracks';
 import PagePlayList from './componets/pages/PagePlayList';
 import PageProfileEditing from './componets/pages/PageProfileEditing';
 import PageSinglePlaylist from './componets/pages/PageSinglePlaylist';
-import MusicPlayerSlider from './componets/pages/MusicPlayerSlider'
+import MusicPlayerSlider from './componets/MusicPlayerSlider';
 import PageSearchTracks from './componets/pages/PageSearchTracks';
 import PageCreatingAndEditingPlaylist from './componets/pages/PageCreatingAndEditingPlaylist';
 import PageMyPlaylist from './componets/pages/PageMyPlaylist';
