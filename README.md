@@ -1,6 +1,6 @@
 # Audio-player
 Audio-player-application for listening to music.
-#####Application functionality:
+##### Application functionality:
 
 * ability to edit profile (adding photos, changing nickname, password)
 * bility to create a playlist
