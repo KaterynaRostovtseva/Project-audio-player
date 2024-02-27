@@ -3,7 +3,7 @@ Audio-player-application for listening to music.
 ##### Application functionality:
 
 * ability to edit profile (adding photos, changing nickname, password)
-* bility to create a playlist
+* ability to create a playlist
 * ability to edit playlist
 * adding and deleting tracks
 * dragging tracks
