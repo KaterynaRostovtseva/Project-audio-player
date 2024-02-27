@@ -8,4 +8,4 @@ Audio-player-application for listening to music.
 * adding and deleting tracks
 * dragging tracks
 * track search
-* playback audio recordings (pause buttons, switch to previous/* next track, volume control).
+* playback audio recordings (pause buttons, switch to previous/next track, volume control).
