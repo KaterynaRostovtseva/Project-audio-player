@@ -19,7 +19,6 @@ export const authSlice =  createSlice({
         setAboutMe (state, {payload: aboutMe}) {
             state.aboutMe = aboutMe
         },
-
     }
 })
 

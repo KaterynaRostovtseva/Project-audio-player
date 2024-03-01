@@ -18,6 +18,7 @@ import { useGetUserByIdQuery } from '../redux/api';
 import { setAboutMe } from "../redux/slice/authSlice";
 import { setSearchResults } from '../redux/slice/searchSlice';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { setCurrentTime } from '../redux/slice/playerSlice';
 
 
 const Header = (prop) => {
@@ -51,6 +52,7 @@ const Header = (prop) => {
  
   const logOut = async () => {
       dispatch(logout());
+      dispatch(setCurrentTime(0))
       handleCloseUserMenu();
       navigate("/");
   };
@@ -59,6 +61,7 @@ const Header = (prop) => {
     refetch({title: searchQuery}).then((res) =>  {
       setSearchTracks(res.data?.TrackFind);
       const searchResults = res.data?.TrackFind;
+      console.log(searchResults)
       dispatch(setSearchResults(searchResults));
     })
     navigate("/search");

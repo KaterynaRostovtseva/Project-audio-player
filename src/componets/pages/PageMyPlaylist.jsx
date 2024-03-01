@@ -40,19 +40,24 @@ export default function PageMyPlaylist() {
         }
     };
 
+    const toPlaylist = async (id) => {
+        navigate(`/playlist/${id}`);
+        localStorage.setItem('Playlist', 'MyPlaylist')
+    };
+
     return isLoading || !myPlaylists ?
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '100px' }}>
             <CircularProgress />
         </Box> :
-        <Grid container sx={{ mx: 10 }}>
-            <Box sx={{ margin: '10px', display: 'flex', flexDirection: 'column' }}>
+        <Grid container >
+            <Box sx={{ margin: '30px', display: 'flex', flexDirection: 'column' }}>
                 <Typography component="h2" variant="h4" sx={{ marginBottom: '30px' }}>Мої плейлисти</Typography>
                 <Button variant="contained" sx={{ marginBottom: '30px' }} onClick={() => { navigate(`/creatingPlaylist`) }}>Створити плейлист</Button>
             </Box>
-            <Grid container >
+            <Grid item md={12} sx={{ display: 'flex', flexWrap: 'wrap' }}>
                 {myPlaylists?.PlaylistFind?.map((playlist, index) => (
                     playlist._id && playlist.name ?
-                        <Grid item md={3} key={index} sx={{ margin: '10px' }}>
+                        <Grid item md={3} key={index} sx={{ margin: '30px' }}>
                             <Card sx={{ maxWidth: 300, height: 180 }} >
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="div">
@@ -63,8 +68,8 @@ export default function PageMyPlaylist() {
                                     </Typography>
                                 </CardContent>
                                 <CardActions>
-                                    <Button size="small" onClick={() => { navigate(`/playlist/${playlist._id}`) }}>Детальніше</Button>
-                                    <IconButton onClick={() => { navigate(`/editPlaylist/${playlist._id}`) }}>
+                                    <Button sx={{ mx: 2 }} size="small" onClick={() => { toPlaylist(playlist._id) }}>Детальніше</Button>
+                                    <IconButton sx={{ mx: 2 }} onClick={() => { navigate(`/editPlaylist/${playlist._id}`) }}>
                                         <EditOutlinedIcon />
                                     </IconButton>
                                     <IconButton onClick={() => { handleDelete(playlist._id) }}>
@@ -73,7 +78,7 @@ export default function PageMyPlaylist() {
                                 </CardActions>
                             </Card>
                         </Grid>
-                        : null
+                    : null
                 ))}
             </Grid>
         </Grid>

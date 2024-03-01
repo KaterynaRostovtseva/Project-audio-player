@@ -12,9 +12,9 @@ const PageSearchTracks = () => {
     const playerState = useSelector(state => state.persistedReducer.player);
     const tracks = useSelector((state) => state.persistedReducer.search.searchTracks);
     const [track, setTrackById] = useState(playerState.track);
-
+    
     const totalTracks = tracks?.length || 0;
-    const tracksPerPage = 5;
+    const tracksPerPage = 50;
     const totalPages = Math.ceil(totalTracks / tracksPerPage);
     const [currentPage, setCurrentPage] = useState(1); // Стан для відстеження поточної сторінки
     const startIndex = (currentPage - 1) * tracksPerPage; // Обчислюємо індекси треків, які мають відображатись на поточній сторінці

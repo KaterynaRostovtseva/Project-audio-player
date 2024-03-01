@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useGetTracksMyQuery } from '../../redux/api';
-import {CircularProgress, CardContent, Grid, Table, TableCell, TableContainer, TableRow, TableHead, Box, Paper, Typography, TableBody} from "@mui/material";
+import { CircularProgress, CardContent, Grid, Table, TableCell, TableContainer, TableRow, TableHead, Box, Paper, Typography, TableBody } from "@mui/material";
 import { useDispatch, useSelector } from 'react-redux';
 import { IconButton } from "@mui/material";
 import { PlayArrow } from "@mui/icons-material";
@@ -12,7 +12,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 
 const PageMyTracks = () => {
-    
+
     const dispatch = useDispatch();
     const idUser = useSelector(store => store.persistedReducer.auth.payload.sub.id);
     const playerState = useSelector(state => state.persistedReducer.player);
@@ -39,7 +39,7 @@ const PageMyTracks = () => {
         }
         if (currentPage !== 1) {
             let num = currentPage - 1;
-            num = num * 5;
+            num = num * 50;
             const [reorderedItem] = newTracks.splice(result.source.index + num, 1);
             newTracks.splice(result.destination.index + num, 0, reorderedItem);
         }
@@ -52,7 +52,7 @@ const PageMyTracks = () => {
     };
 
     const totalTracks = tracks.length || 0;
-    const tracksPerPage = 5;
+    const tracksPerPage = 50;
     const startIndex = (currentPage - 1) * tracksPerPage;
     const endIndex = startIndex + tracksPerPage;
     const tracksToDisplay = tracks.slice(startIndex, endIndex);
@@ -73,7 +73,7 @@ const PageMyTracks = () => {
                 <CircularProgress />
             </Box>
         ) : (
-            <Grid container sx={{ mx: 10, my: 3, width: '80%' }}>
+            <Grid container sx={{ mx: 5, width: '80%' }}>
                 <Box>
                     <CardContent md={12} sx={{ my: 1, width: '100%' }}>
                         <Typography component="h1" variant="h4" sx={{ marginBottom: '10px' }}>Мої треки</Typography>
@@ -143,6 +143,7 @@ const PageMyTracks = () => {
                         onChange={handlePageChange}
                     />
                 </Stack>
+                <div style={{ height: '210px', width: '100%' }}></div>
             </Grid>
         )
     );

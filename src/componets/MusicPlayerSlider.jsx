@@ -1,7 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { play, pause, stop, setDuration, nextTrack, prevTrack, setCurrentTime, setVolume } from '../redux/slice/playerSlice';
-import { audio } from "../redux/slice/playerSlice";
+import { play, pause, stop, nextTrack, prevTrack, setCurrentTime, setVolume } from '../redux/slice/playerSlice';
 import { Grid, Box, Typography } from "@mui/material";
 import Slider from '@mui/material/Slider';
 import PauseRounded from '@mui/icons-material/PauseRounded';
@@ -24,27 +23,12 @@ const MusicPlayerSlider = () => {
   const volume = useSelector(state => state.persistedReducer.player.volume);
   const data = useSelector(state => state.persistedReducer.player.track);
 
-  useEffect(() => {
-    // Установка обробників подій аудіо
-    audio.onended = () => dispatch(nextTrack());
-    audio.ondurationchange = () => dispatch(setDuration(audio.duration));
-    audio.ontimeupdate = () => dispatch(setCurrentTime(audio.currentTime));
-
-    return () => {
-      // Очищення обробників подій при розмонтуванні компонента
-      audio.onended = null;
-      audio.ondurationchange = null;
-      audio.ontimeupdate = null;
-    };
-  }, [audio, dispatch]);
-
   const handleTimeUpdate = (newValue) => {
     dispatch(setCurrentTime(newValue));
   };
 
   const handlePlay = () => {
     dispatch(play());
-    audio.ontimeupdate = () => dispatch(setCurrentTime(audio.currentTime));
   };
 
   const handlePause = () => {
@@ -53,7 +37,6 @@ const MusicPlayerSlider = () => {
 
   const handleStop = () => {
     dispatch(stop());
-    audio.ontimeupdate = () => dispatch(setCurrentTime(0));
   };
 
   const handleVolumeChange = e => {
@@ -88,12 +71,12 @@ const MusicPlayerSlider = () => {
           {data && data.id3.title || 'Назва відсутня'}
         </Typography>
       </Box>
-      <Box sx={{ boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)' }} >
-        {playerState.isPlaying && <AudioVisualizer audio={audio} />}
+      <Box >
+        <AudioVisualizer />
       </Box>
-      <Box sx={{ boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)' }}>
+      <Box sx={{ boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)'}}>
         <Box>
-          <Box sx={{ mx: 2, my: 3, width: '100%', display: "flex", flexDirection: 'space-between', alignItems: 'center' }}>
+          <Box sx={{ mx: 2, my:2, width: '100%', display: "flex", flexDirection: 'space-between', alignItems: 'center' }}>
             {`${Math.floor(currentTime / 60) < 10 ? "0" : ""}${Math.floor(currentTime / 60)} : ${Math.round(currentTime % 60) < 10 ? "0" : ""}${Math.round(currentTime % 60)}`}
             <Slider
               sx={{ mx: 2, width: '85%', color: "#c0c0c0fff" }}
@@ -107,7 +90,7 @@ const MusicPlayerSlider = () => {
             />
             {`${Math.floor(duration / 60) < 10 ? "0" : ""}${Math.floor(duration / 60)} : ${Math.round(duration % 60) < 10 ? "0" : ""}${Math.round(duration % 60)}`}
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'space-between', padding: "5px 10px" }}>
+          <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'space-between' }}>
             <Box >
               <IconButton onClick={handlePrevTrack}><FastRewindRounded /> </IconButton>
               {playerState.isPlaying === true ? <IconButton onClick={handlePause}> <PauseRounded /></IconButton>
@@ -118,13 +101,13 @@ const MusicPlayerSlider = () => {
             </Box>
             <Box>
               <Typography style={{ textAlign: "center", padding: "0 5px" }}>
-                {data && data.id3 && data.id3.album || 'Альбом відсутній'}
+             {data && data.id3 && data.id3.artist || 'Виконавець не вказаний'}
               </Typography>
               <Typography style={{ textAlign: "center", padding: "0 5px" }}>
-                {data && data.id3 && data.id3.artist || 'Виконавець відсутній'}
+                {data && data.id3 && data.id3.album || 'Альбом не вказаний'}
               </Typography>
             </Box>
-            <Box sx={{ my: 1, width: '300px' }}>
+            <Box sx={{ width: '300px' }}>
               <Stack spacing={1} direction="row" sx={{ mb: 1 }} alignItems="center">
                 <VolumeDownRounded />
                 <Slider aria-label="Volume" value={volume * 100} onChange={(event, newVolume) => handleVolumeChange(newVolume)} style={{ color: "#c0c0c0fff" }} />
@@ -139,4 +122,3 @@ const MusicPlayerSlider = () => {
 };
 
 export default MusicPlayerSlider;
-

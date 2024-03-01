@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Basic from '../Dropzone/Basic';
@@ -9,12 +10,15 @@ import { useParams } from "react-router-dom";
 import { useGetPlaylistIdQuery } from '../../redux/api';
 import { Grid, Table, TableCell, TableContainer, TableRow, TableHead, Box, Paper, Typography, TableBody } from "@mui/material";
 import { IconButton } from "@mui/material";
-import Pagination from '@mui/material/Pagination';
-import Stack from '@mui/material/Stack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { CircularProgress } from "@mui/material";
 import Modal from '@mui/material/Modal';
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
+import { useSearchTrackQuery } from '../../redux/api';
+import { setSearchResults } from '../../redux/slice/searchSlice';
+import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 
 const style = {
     position: 'absolute',
@@ -28,12 +32,14 @@ const style = {
     p: 4,
 };
 
-
 const PageCreatingAndEditingPlaylist = () => {
-
+    const dispatch = useDispatch();
     const [upsertPlaylistMutation] = useUpsertPlaylistMutation();
     let [tracksId, setTracksId] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
     let { id } = useParams();
+    const { isLoadingSerch, refetch: serchRefetch } = useSearchTrackQuery({ title: searchQuery });
+    const [searchResults, setSearchTracks] = useState([]);
 
     if (id === undefined) {
         id = '';
@@ -45,6 +51,7 @@ const PageCreatingAndEditingPlaylist = () => {
     const [description, setDescription] = useState('');
     let [tracks, setTracks] = useState([]);
     const [openModal, setOpenModal] = useState(false);
+    let [loadFile, setLoadFile] = useState(false);
 
     useEffect(() => {
         if (data?.PlaylistFindOne) {
@@ -55,8 +62,10 @@ const PageCreatingAndEditingPlaylist = () => {
             let tracksArrId = data?.PlaylistFindOne?.tracks.map(i => i._id);
             setTracksId(tracksArrId);
         }
-
-    }, [data]);
+        if (searchQuery === '') {
+            setSearchTracks([]);
+        }
+    }, [data, searchQuery]);
 
     const handleUploadResult = (id) => {
         setTracksId(prevIds => [...prevIds, id]);
@@ -75,10 +84,11 @@ const PageCreatingAndEditingPlaylist = () => {
             let newTracksId = tracksId.map(i => { let item = { _id: i }; return item });
             const res = await upsertPlaylistMutation({ playlistId: playlistId, namePls: name, descriptionPls: description, tracksId: newTracksId });
             if (res) {
-                if(id === '') {
+                if (id === '') {
                     navigate(-1);
                 } else {
                     setOpenModal(true);
+                    setLoadFile(true);
                     await refetch();
                 }
             }
@@ -89,17 +99,25 @@ const PageCreatingAndEditingPlaylist = () => {
         }
     };
 
-    const totalTracks = tracks.length || 0;
-    const tracksPerPage = 5;
-    const totalPages = Math.ceil(totalTracks / tracksPerPage);
-    const [currentPage, setCurrentPage] = useState(1); // Стан для відстеження поточної сторінки
-    const startIndex = (currentPage - 1) * tracksPerPage; // Обчислюємо індекси треків, які мають відображатись на поточній сторінці
-    const endIndex = startIndex + tracksPerPage;
-    const tracksToDisplay = tracks?.slice(startIndex, endIndex);
+    const addTrack = async (trackId) => {
+        tracksId.push(trackId);
+        try {
+            let playlistId;
+            if (id !== undefined) {
+                playlistId = id;
+            } else {
+                playlistId = '';
+            }
+            let newTracksId = tracksId.map(i => { let item = { _id: i }; return item });
+            const res = await upsertPlaylistMutation({ playlistId: playlistId, namePls: name, descriptionPls: description, tracksId: newTracksId });
+            if (res) {
+                await refetch();
+            }
 
-    const handlePageChange = (event, newPage) => {
-        setCurrentPage(newPage);
-    };
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const handleDelete = async (trackId) => {
         try {
@@ -118,11 +136,24 @@ const PageCreatingAndEditingPlaylist = () => {
         }
     };
 
+    const handleSearch = async () => {
+        try {
+            let res = await serchRefetch({ title: searchQuery });
+            if (res) {
+                setSearchTracks(res.data?.TrackFind);
+                dispatch(setSearchResults(searchResults));
+            }
+        } catch (error) {
+            console.error("Помилка пошуку", error);
+        }
+
+    }
+
     return isLoading ?
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '100px' }}>
             <CircularProgress />
         </Box> :
-        <Grid item md={10} sx={{ my: 3, mx: 10, boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)' }}>
+        <Grid item md={12} sx={{ mx: 1, boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)' }}>
             <Box sx={{ mx: 4, display: 'flex', flexDirection: 'column' }}>
                 <>
                     {id !== '' ?
@@ -135,6 +166,53 @@ const PageCreatingAndEditingPlaylist = () => {
                         </Typography>
                     }
                 </>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid grey', width: '500px', borderRadius: '5px' }}>
+                    <Box>
+                        <IconButton sx={{ padding: '1px' }} onClick={() => handleSearch()}>
+                            <SearchIcon />
+                        </IconButton>
+                    </Box>
+                    <Box>
+                        <InputBase
+                            sx={{ width: '400px' }}
+                            placeholder="Пошук музики…"
+                            value={searchQuery}
+                            onChange={(e) => { setSearchQuery(e.target.value) }}
+                        />
+                    </Box>
+                    <Box>
+                        <IconButton sx={{ padding: '1px' }} onClick={() => setSearchQuery('')}>
+                            <CloseOutlinedIcon />
+                        </IconButton>
+                    </Box>
+                </Box>
+                <TableContainer component={Paper} >
+                    <Table aria-label="simple table">
+                        <TableHead>
+                        </TableHead>
+                        <TableBody>
+                            {searchResults?.map((item, index) =>
+                                <TableRow key={index}>
+                                    <TableCell >
+                                        <IconButton onClick={() => { addTrack(item._id) }}>
+                                            <AddCircleSharpIcon />
+                                        </IconButton>
+                                    </TableCell>
+                                    <TableCell >
+                                        {item.id3 === null ? 'Без назви' : item.id3.title !== null ? item.id3.title : 'Без назви'}
+                                    </TableCell>
+                                    <TableCell >
+                                        {item.id3 === null ? 'Без назви' : item.id3.album !== null ? item.id3.album : 'Без назви'}
+                                    </TableCell>
+                                    <TableCell >
+                                        {item.id3 === null ? 'Без назви' : item.id3.artist !== null ? item.id3.artist : 'Без назви'}
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
                 <Box component="form" sx={{ width: '600px' }} >
                     <Box sx={{ my: 2, display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }} >
                         <Box>
@@ -143,7 +221,7 @@ const PageCreatingAndEditingPlaylist = () => {
                             </Typography>
                         </Box>
                         <Box sx={{ mx: 9, width: '300px' }}>
-                            <Basic uploadResult={handleUploadResult} />
+                            <Basic uploadResult={handleUploadResult} prop={loadFile} />
                         </Box>
                     </Box>
                     <Grid container sx={{ my: 2, display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
@@ -179,7 +257,7 @@ const PageCreatingAndEditingPlaylist = () => {
                     </Box>
                     {id !== undefined ?
                         <>
-                            <TableContainer component={Paper} sx={{ width: '100%' }} >
+                            <TableContainer component={Paper} sx={{ width: '1000px' }} >
                                 <Table aria-label="simple table">
                                     <TableHead>
                                         <TableRow>
@@ -190,7 +268,7 @@ const PageCreatingAndEditingPlaylist = () => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {tracksToDisplay?.map((item, index) =>
+                                        {tracks?.map((item, index) =>
                                             <TableRow key={index}>
                                                 <TableCell >
                                                     <IconButton onClick={() => { handleDelete(item._id) }}>
@@ -213,12 +291,12 @@ const PageCreatingAndEditingPlaylist = () => {
                             </TableContainer>
                             <Modal
                                 open={openModal}
-                                onClose={() => setOpenModal(false)}
+                                onClose={() => { setOpenModal(false); setLoadFile(false) }}
                                 aria-labelledby="modal-modal-title"
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={style} >
-                                    <IconButton sx={{ padding: '1px', position: 'absolute', right: '0', top: '0' }} onClick={() => setOpenModal(false)}>
+                                    <IconButton sx={{ padding: '1px', position: 'absolute', right: '0', top: '0' }} onClick={() => { setOpenModal(false); setLoadFile(false) }}>
                                         <CloseOutlinedIcon />
                                     </IconButton>
                                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -227,13 +305,6 @@ const PageCreatingAndEditingPlaylist = () => {
 
                                 </Box>
                             </Modal>
-                            <Stack spacing={2} >
-                                <Pagination
-                                    count={totalPages}
-                                    page={currentPage}
-                                    onChange={handlePageChange}
-                                />
-                            </Stack>
                         </>
                         : null}
                 </Box>

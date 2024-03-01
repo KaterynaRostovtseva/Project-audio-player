@@ -13,6 +13,26 @@ const initialState = {
 
 export const backendUrl = "http://player.node.ed.asmer.org.ua/";
 export const audio = new Audio();
+audio.crossOrigin = "anonymous";
+
+let audioContext, analyser, source;
+
+document.body.onclick = () => {
+    if (audioContext) return;
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        // Створюємо аналізатор для аудіо
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+    
+        source = audioContext.createMediaElementSource(audio);//Створюємо джерело медіа елемента з аудіо
+    
+        //Перевіряємо, чи вже підключений елемент джерела медіа, і відключаємо його
+        // Підключаємо джерело до аналізатора та аудіо контексту
+        source.connect(analyser);
+        source.connect(audioContext.destination);
+}
+    
+export const getAnalyser = () => analyser;
 
 const playerSlice = createSlice({ 
   name: 'player',
@@ -36,8 +56,8 @@ const playerSlice = createSlice({
         state.isPlaying = false
     },
     stop (state) {
-        audio.pause()
         state.currentTime = 0
+        audio.pause()
         state.isPlaying = false
         state.isStopped = true
     },
@@ -99,8 +119,7 @@ const playerSlice = createSlice({
     setVolume (state, {payload}) {
         audio.volume = payload
         state.volume = payload
-    }
-
+    },
 }
 })
 

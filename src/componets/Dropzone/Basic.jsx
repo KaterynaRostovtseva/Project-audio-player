@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useGetUserByIdQuery} from '../../redux/api';
 import { setAboutMe } from "../../redux/slice/authSlice";
 
-const Basic = ({ uploadResult }) => {
-    
+const Basic = ({ uploadResult, prop }) => {
+
     const stateAuth = useSelector((state) => state.persistedReducer.auth);
     const id = stateAuth.payload.sub.id;
     const dispatch = useDispatch();
@@ -19,8 +19,11 @@ const Basic = ({ uploadResult }) => {
         if (!isLoading && data) {
             dispatch(setAboutMe(data.UserFindOne));
         }
-    }, [data, isLoading, dispatch]);
-
+        if(prop) {
+            setFiles([]);
+        }
+    }, [data, isLoading, dispatch, prop]);
+    
     const handleDrop = async (acceptedFiles) => {
         for (const file of acceptedFiles) {
             try {

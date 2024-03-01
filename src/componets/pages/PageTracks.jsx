@@ -21,7 +21,7 @@ const PageTracks = () => {
     }
 
     const totalTracks = playlist?.TrackFind.length || 0;
-    const tracksPerPage = 5;
+    const tracksPerPage = 50;
     const totalPages = Math.ceil(totalTracks / tracksPerPage);
     const [currentPage, setCurrentPage] = useState(1); // Стан для відстеження поточної сторінки
     const startIndex = (currentPage - 1) * tracksPerPage; // Обчислюємо індекси треків, які мають відображатись на поточній сторінці
@@ -47,10 +47,10 @@ const PageTracks = () => {
             <CircularProgress />
         </Box>
         :
-        <Grid container sx={{ mx: 10, my: 3, width: '80%' }}>
+        <Box sx={{ mx: 5, width: '90%' }}>
             <Box>
                 <CardContent md={12} sx={{ my: 1, width: '100%' }} >
-                    <Typography component="h1" variant="h4" sx={{ marginBottom: '30px' }}>Треки</Typography>
+                    <Typography component="h1" variant="h4" sx={{ marginBottom: '10px' }}>Треки</Typography>
                 </CardContent>
             </Box>
             <TableContainer component={Paper} sx={{ width: '100%' }} >
@@ -98,7 +98,7 @@ const PageTracks = () => {
                     onChange={handlePageChange}
                 />
             </Stack>
-        </Grid>
+        </Box>
 }
 
 export default PageTracks;
