@@ -92,10 +92,10 @@ const FooterPlayer = () => {
                   </Box>
                   <Box sx={{color:'white' }}>
                       <Typography style={{ textAlign: "center", padding: "0 5px" }}>
-                          {data && data.id3 && data.id3.artist || 'Виконавець не вказаний'}
+                          {data && data.id3 && data.id3.title || 'Назву не вказано'}
                       </Typography>
                       <Typography style={{ textAlign: "center", padding: "0 5px" }}>
-                          {data && data.id3 && data.id3.album || 'Альбом не вказаний'}
+                          {data && data.id3 && data.id3.artist || 'Виконавця не вказано'}
                       </Typography>
                   </Box>
                   <Box sx={{ width: '300px' }}>
