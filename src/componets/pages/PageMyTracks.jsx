@@ -73,7 +73,7 @@ const PageMyTracks = () => {
                 <CircularProgress />
             </Box>
         ) : (
-            <Grid container sx={{ mx: 5, width: '80%' }}>
+            <Grid container sx={{ mx: 5, width: '90%' }}>
                 <Box>
                     <CardContent md={12} sx={{ my: 1, width: '100%' }}>
                         <Typography component="h1" variant="h4" sx={{ marginBottom: '10px' }}>Мої треки</Typography>

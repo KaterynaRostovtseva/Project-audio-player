@@ -153,7 +153,7 @@ const PageCreatingAndEditingPlaylist = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '100px' }}>
             <CircularProgress />
         </Box> :
-        <Grid item md={12} sx={{ mx: 1, boxShadow: '0px 2px 1px -1px rgba(0,0,0,0.2), 0px 1px 1px 0px rgba(0,0,0,0.14), 0px 1px 3px 0px rgba(0,0,0,0.12)' }}>
+        <Grid item md={12} sx={{ mx: 1 }}>
             <Box sx={{ mx: 4, display: 'flex', flexDirection: 'column' }}>
                 <>
                     {id !== '' ?
@@ -166,6 +166,7 @@ const PageCreatingAndEditingPlaylist = () => {
                         </Typography>
                     }
                 </>
+                {id !== '' ?
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid grey', width: '500px', borderRadius: '5px' }}>
                     <Box>
                         <IconButton sx={{ padding: '1px' }} onClick={() => handleSearch()}>
@@ -186,6 +187,7 @@ const PageCreatingAndEditingPlaylist = () => {
                         </IconButton>
                     </Box>
                 </Box>
+                : null}
                 <TableContainer component={Paper} >
                     <Table aria-label="simple table">
                         <TableHead>

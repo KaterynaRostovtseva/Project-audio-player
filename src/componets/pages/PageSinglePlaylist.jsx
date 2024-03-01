@@ -54,23 +54,19 @@ const PageSinglePlaylist = () => {
         </Box>
     ) : (
         <>
-            <Grid container item md={10} sx={{mx:5, my: 3, width: '100%' }}>
-                <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <Box>
-                        <CardContent md={12} sx={{ my: 1, width: '100%' }} >
-                            <Typography gutterBottom variant="h4" component="div">
-                                {playlist?.PlaylistFindOne.name || 'No Name'}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {data.PlaylistFindOne.description || 'No Description'}
-                            </Typography>
-                        </CardContent>
-                    </Box>
+            <Box sx={{ mx: 1 }}>
+                <Box sx={{ mx: 5,my:3, display: 'flex', flexDirection: 'column' }}>
+                    <Typography gutterBottom variant="h4" component="div">
+                        {playlist?.PlaylistFindOne.name || 'Немає назви'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {data.PlaylistFindOne.description || 'Немає опису'}
+                    </Typography>
                 </Box>
-                <Grid container item md={10} sx={{ mx: 1 }}>
-                    <Typography gutterBottom variant="h6" component="div" sx={{ mx: 1, my: 1 }}>Треки</Typography>
+                <Box sx={{ mx: 1 }}>
+                    <Typography gutterBottom variant="h6" component="div" sx={{ mx: 5, my: 1 }}>Треки</Typography>
                     <DragDropContext onDragEnd={handleDragEnd}>
-                        <TableContainer component={Paper}>
+                        <TableContainer component={Paper} sx={{ mx: 5, my: 2, width:'90%'}}>
                             <Table aria-label="simple table">
                                 <TableHead>
                                     <TableRow>
@@ -126,8 +122,8 @@ const PageSinglePlaylist = () => {
                             </Table>
                         </TableContainer>
                     </DragDropContext>
-                </Grid>
-            </Grid>
+                </Box>
+            </Box>
             <div style={{height: '210px', width: '100%'}}></div>
         </>
     )
