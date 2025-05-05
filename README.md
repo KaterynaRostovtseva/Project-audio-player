@@ -10,4 +10,4 @@ Audio-player-application for listening to music.
 * track search
 * playback audio recordings (pause buttons, switch to previous/next track, volume control).
 
-<http://audioplayer.katjarost1501.fe.a-level.com.ua/>
+
